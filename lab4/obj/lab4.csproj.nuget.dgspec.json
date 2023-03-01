@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Pioneer\\source\\repos\\lab4\\lab4\\lab4.csproj": {}
+    "C:\\Users\\Pioneer\\Documents\\ДНУ\\АК\\Лаб4\\lab4\\lab4\\lab4.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Pioneer\\source\\repos\\lab4\\lab4\\lab4.csproj": {
+    "C:\\Users\\Pioneer\\Documents\\ДНУ\\АК\\Лаб4\\lab4\\lab4\\lab4.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Pioneer\\source\\repos\\lab4\\lab4\\lab4.csproj",
+        "projectUniqueName": "C:\\Users\\Pioneer\\Documents\\ДНУ\\АК\\Лаб4\\lab4\\lab4\\lab4.csproj",
         "projectName": "lab4",
-        "projectPath": "C:\\Users\\Pioneer\\source\\repos\\lab4\\lab4\\lab4.csproj",
+        "projectPath": "C:\\Users\\Pioneer\\Documents\\ДНУ\\АК\\Лаб4\\lab4\\lab4\\lab4.csproj",
         "packagesPath": "C:\\Users\\Pioneer\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Pioneer\\source\\repos\\lab4\\lab4\\obj\\",
+        "outputPath": "C:\\Users\\Pioneer\\Documents\\ДНУ\\АК\\Лаб4\\lab4\\lab4\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Pioneer\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -55,7 +55,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "c:\\program files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }

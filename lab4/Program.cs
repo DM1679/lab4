@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace lab4
 {
@@ -8,92 +8,51 @@ namespace lab4
     {
         static int Main(string[] args)
         {
-            if(args.Length == 3) 
+            if (args.Length == 3 || args.Length == 4)
             {
                 string funk = args[0];
-                if (funk == "EditCreationTimeFile")
+                string path = args[1];
+                string dateTime = args[2];
+                DateTime ResultDateTime;
+
+                if (!DateTime.TryParse(dateTime, out ResultDateTime))
                 {
-                    string dateTime = args[2];
-                    string path = args[1];
-                    Console.WriteLine(funk);
-                    Console.WriteLine(path);
-                    Console.WriteLine(dateTime);
-                    DateTime ResultDateTime = GetDate(dateTime);
-                    EditCreationTimeFile(path, ResultDateTime);
+                    Console.WriteLine($"Ошибка: неверный формат даты/времени: {dateTime}");
+                    return 1;
                 }
-                if(funk == "EditCreationTimeFiles")
+
+                switch (funk)
                 {
-                    string dateTime = args[2];
-                    string path = args[1];
-                    DateTime ResultDateTime = GetDate(dateTime);
-                    EditCreationTimeFiles(path, ResultDateTime);
+                    case "EditCreationTimeFile":
+                        EditCreationTimeFile(path, ResultDateTime);
+                        break;
+                    case "EditCreationTimeFiles":
+                        EditCreationTimeFiles(path, ResultDateTime);
+                        break;
+                    case "EditCreationTimeFilesMask":
+                        string mask = args[3];
+                        EditCreationTimeFilesMask(path, ResultDateTime, mask);
+                        break;
+                    default:
+                        Console.WriteLine($"Ошибка: неизвестная команда: {funk}");
+                        return 1;
                 }
 
                 return 0;
             }
-            else if (args.Length == 4)
+            else if (args.Length == 1 && args[0] == "?")
             {
-                string funk = args[0];
-                if (funk == "EditCreationTimeFilesMask")
-                {
-                    string dateTime = args[2];
-                    string path = args[1];
-                    string maskTemp = args[3];
-                    DateTime ResultDateTime = GetDate(dateTime);
-                    EditCreationTimeFilesMask(path, ResultDateTime, maskTemp);
-                }
-
-                return 0;
-            }
-            else if (args.Length == 1)
-            {
-                string funk = args[0];
-                if (funk == "?")
-                {
-                    Console.WriteLine("Є два режими запуску з параметрами\n1. Запуск с трьома параметрами «lab4.exe \"назва функції\" \"шлях\" \"дата та час\"»\n2. Запуск с чотирма параметрами «lab4.exe \"назва функції\" \"шлях\" \"дата та час\" \"маска\"»");
-                }
-
+                Console.WriteLine("Є два режими запуску з параметрами\n1. Запуск с трьома параметрами «lab4.exe \"назва функції\" \"шлях\" \"дата та час\"»\n2. Запуск с чотирма параметрами «lab4.exe \"назва функції\" \"шлях\" \"дата та час\" \"маска\"»");
                 return 0;
             }
             else
             {
-                string dateTime = "16.06.2030 18:00:00";
-                string path = "C:\\Users\\Pioneer\\Desktop\\text.txt";
-                DateTime ResultDateTime = GetDate(dateTime);
-                EditCreationTimeFile(path, ResultDateTime);
-                //string path = "C:\\Users\\Pioneer\\Downloads";
-                //EditCreationTimeFiles(path, ResultDateTime);
-
-                return 0;
+                Console.WriteLine($"Ошибка: неверное количество параметров: {args.Length}");
+                return 1;
             }
         }
 
-        public static DateTime GetDate(string dateTime)
-        {
-            string date = dateTime.Split(" ")[0];
-            string time = dateTime.Split(" ")[1];
-
-            int day;
-            int.TryParse(date.Split(".")[0], out day);
-
-            int month;
-            int.TryParse(date.Split(".")[1], out month);
-
-            int year;
-            int.TryParse(date.Split(".")[2], out year);
-
-            int hour;
-            int.TryParse(time.Split(":")[0], out hour);
-            int minutes;
-            int.TryParse(time.Split(":")[1], out minutes);
-            int seconds;
-            int.TryParse(time.Split(":")[2], out seconds);
-
-            DateTime ResultDateTime = new DateTime(year, month, day, hour, minutes, seconds);
-            return ResultDateTime;
-        }
-
-        public static void EditCreationTimeFile(string filePath, DateTime dateTime) 
+        public static void EditCreationTimeFile(string filePath, DateTime dateTime)
         {
             if (File.Exists(filePath))
             {
@@ -101,47 +60,46 @@ namespace lab4
                 File.SetLastWriteTime(filePath, dateTime);
                 File.SetLastAccessTime(filePath, dateTime);
             }
+            else
+            {
+                Console.WriteLine($"Ошибка: файл не найден: {filePath}");
+            }
         }
 
         public static void EditCreationTimeFiles(string filePaths, DateTime dateTime)
         {
-            string[] allfiles = Directory.GetFiles(filePaths);
-            foreach (string filePath in allfiles) 
+            if (Directory.Exists(filePaths))
             {
-                if (File.Exists(filePath))
+                string[] allfiles = Directory.GetFiles(filePaths);
+                foreach (string filePath in allfiles)
                 {
-                    File.SetCreationTime(filePath, dateTime);
-                    File.SetLastWriteTime(filePath, dateTime);
-                    File.SetLastAccessTime(filePath, dateTime);
+                    EditCreationTimeFile(filePath, dateTime);
                 }
+            }
+            else
+            {
+                Console.WriteLine($"Ошибка: директория не найдена: {filePaths}");
             }
         }
 
         public static void EditCreationTimeFilesMask(string filePaths, DateTime dateTime, string maskTemp)
         {
-            string[] allfiles = Directory.GetFiles(filePaths);
-            foreach (string filePath in allfiles)
+            if (Directory.Exists(filePaths))
             {
-                string mask = ReverseString(filePath);
-                mask = mask.Split(".")[0];
-                mask = ReverseString(mask);
-                if (mask == maskTemp)
+                string[] allfiles = Directory.GetFiles(filePaths);
+                foreach (string filePath in allfiles)
                 {
-                    if (File.Exists(filePath))
+                    string mask = Path.GetExtension(filePath);
+                    if (mask == maskTemp)
                     {
-                        File.SetCreationTime(filePath, dateTime);
-                        File.SetLastWriteTime(filePath, dateTime);
-                        File.SetLastAccessTime(filePath, dateTime);
+                        EditCreationTimeFile(filePath, dateTime);
                     }
                 }
             }
-        }
-
-        public static string ReverseString(string s)
-        {
-            char[] arr = s.ToCharArray();
-            Array.Reverse(arr);
-            return new string(arr);
+            else
+            {
+                Console.WriteLine($"Ошибка: директория не найдена: {filePaths}");
+            }
         }
     }
 }
